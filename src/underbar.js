@@ -107,13 +107,49 @@
     return notTest;
   };
 
+
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
+    // input array, isSorted boolean, iterator
+    var result = [];
+    var helper = [];
+    // if iterator exists, otherwise return value with _.identity
+    var iterator = _.identity || iterator;
+    // isSorted true
+    if (isSorted) {
+      _.each(array, function(element) {
+        if (_.indexOf(helper, iterator(element)) === -1) {
+          helper.push(iterator(element));
+          result.push(element);
+        }
+      });
+    } else {
+      // if not sorted...
+      _.each(array, function(element) {
+        if (_.indexOf(result, iterator(element)) === -1) {
+          result.push(element);
+        }
+      });
+    }
+
+    // if array is empty, return new empty array
+    if (array.length === 0) {
+      result = [];
+    }
+
+    // return unique new array
+    return result;
   };
 
 
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
+    var iterator = iterator || _.identity;
+    var result = [];
+    _.each(collection, element => {
+      result.push(iterator(element));
+    });
+    return result;
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
